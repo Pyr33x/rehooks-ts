@@ -8,6 +8,7 @@ import {
 import { File, Folder, Files } from "fumadocs-ui/components/files";
 import { Text } from "@/components/internal/text";
 import { cn } from "utils";
+import { Beam } from "@/components/internal/demo";
 
 interface Card {
   id: number;
@@ -64,11 +65,7 @@ const cards: Card[] = [
     name: "Performance-Driven",
     description:
       "All hooks are meticulously crafted with SOLID principles, ensuring efficient, optimized, and robust performance.",
-    content: (
-      <div className="flex h-52 items-center justify-center">
-        <Text text="SOLID" />
-      </div>
-    ),
+    content: <Beam />,
     class: "max-w-md",
   },
   {
