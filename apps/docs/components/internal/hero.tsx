@@ -1,6 +1,6 @@
 "use client";
 
-import { useClipboard, useKeyPress, useDevice } from "@/hooks";
+import { useClipboard, useKeyPress } from "@/hooks";
 import { Badge } from "@/components/internal";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
@@ -10,7 +10,6 @@ import Link from "next/link";
 export function Hero() {
   const router = useRouter();
   const { copy, isCopied } = useClipboard();
-  const { isMobile, isDesktop, isTablet } = useDevice();
   const copyKeyPressed = useKeyPress({ key: "c", meta: true });
   const documentPressed = useKeyPress({ key: "d", meta: true });
 
@@ -53,28 +52,19 @@ export function Hero() {
           onClick={handleCopy}
           className="cursor-copy font-mono"
         >
-          {isMobile ? null : (
-            <kbd className="pointer-events-none mr-2 inline-flex h-5 select-none items-center gap-1 rounded bg-neutral-100 px-1.5 font-mono text-neutral-900 dark:bg-green-300 dark:text-green-900">
-              <span className="text-xl">⌘</span>
-              <span>C</span>
-            </kbd>
-          )}
-          {isMobile && isCopied
-            ? "Copied to Clipboard!"
-            : "npx rehooks-cli@latest"}
-          {isTablet && isDesktop && isCopied
-            ? "Copied to Clipboard!"
-            : "$ npx rehooks-cli@latest"}
+          <kbd className="pointer-events-none mr-2 inline-flex h-5 select-none items-center gap-1 rounded bg-neutral-100 px-1.5 font-mono text-neutral-900 dark:bg-green-300 dark:text-green-900">
+            <span className="text-xl">⌘</span>
+            <span>C</span>
+          </kbd>
+          {isCopied ? "Copied to Clipboard!" : "npx rehooks-cli@latest"}
         </Button>
         <Link href="/docs" className="outline-none ring-0">
           <Button size="circular" variant="secondary" className="font-mono">
-            {isMobile ? "Docs" : "Documentation"}
-            {isMobile ? null : (
-              <kbd className="pointer-events-none ml-2 inline-flex h-5 select-none items-center gap-1 rounded bg-neutral-200 px-1.5 font-mono text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100">
-                <span className="text-xl">⌘</span>
-                <span>D</span>
-              </kbd>
-            )}
+            Documentation
+            <kbd className="pointer-events-none ml-2 inline-flex h-5 select-none items-center gap-1 rounded bg-neutral-200 px-1.5 font-mono text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100">
+              <span className="text-xl">⌘</span>
+              <span>D</span>
+            </kbd>
           </Button>
         </Link>
       </div>
