@@ -1,6 +1,6 @@
 "use client";
 
-import { useClipboard, useKeyPress } from "@/hooks";
+import { useClipboard, useKeyPress, useDevice } from "@/hooks";
 import { Badge } from "@/components/internal";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
@@ -9,6 +9,7 @@ import Link from "next/link";
 
 export function Hero() {
   const router = useRouter();
+  const { isMobile } = useDevice();
   const { copy, isCopied } = useClipboard();
   const copyKeyPressed = useKeyPress({ key: "c", meta: true });
   const documentPressed = useKeyPress({ key: "d", meta: true });
@@ -52,7 +53,7 @@ export function Hero() {
           onClick={handleCopy}
           className="cursor-copy font-mono"
         >
-          {isCopied ? null : (
+          {isMobile ? null : (
             <kbd className="pointer-events-none mr-2 inline-flex h-5 select-none items-center gap-1 rounded bg-neutral-100 px-1.5 font-mono text-neutral-900 dark:bg-green-300 dark:text-green-900">
               <span className="text-xl">⌘</span>
               <span>C</span>
