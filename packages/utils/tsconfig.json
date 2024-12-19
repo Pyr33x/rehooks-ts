@@ -1,5 +1,5 @@
 {
-  "extends": "@rehooks/tsconfig/react.json",
+  "extends": "@rehooks/tsconfig/react-library.json",
   "include": ["."],
   "exclude": ["dist", "node_modules"],
 }

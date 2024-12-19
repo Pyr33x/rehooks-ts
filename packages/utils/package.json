@@ -3,16 +3,13 @@
   "description": "Utility functions and constants for rehooks",
   "version": "0.0.0",
   "private": true,
-  "sideEffects": false,
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "exports": {
+    "./constants": "./src/constants/index.ts",
+    "./types": "./src/types/index.ts",
+    "./functions": "./src/functions/index.ts",
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
     "check-types": "tsc --noEmit"
   },
   "keywords": [
@@ -22,10 +19,9 @@
     "functions"
   ],
   "devDependencies": {
+    "@rehooks/tsconfig": "workspace:*",
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.3",
-    "@rehooks/tsconfig": "workspace:*",
-    "tsup": "^8.3.0",
     "typescript": "^5.6.3"
   },
   "dependencies": {

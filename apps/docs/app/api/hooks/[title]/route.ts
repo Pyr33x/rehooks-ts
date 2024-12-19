@@ -1,9 +1,10 @@
+import { ratelimit } from "@/lib/ratelimit";
 import { NextResponse } from "next/server";
 import type { Hook } from "@rehooks/utils";
 import path from "path";
 import fs from "fs";
 
-const filePath = path.join(process.cwd(), "app", "hooks.json");
+const filePath = path.join(process.cwd(), "lib", "hooks.json");
 
 async function loadData(): Promise<Hook[]> {
   return new Promise((resolve, reject) => {
@@ -24,6 +25,22 @@ export async function GET(
 ) {
   const { title } = params;
 
+  const clientIp = (
+    request.headers.get("x-forwarded-for") ?? "127.0.0.1"
+  ).split(",")[0];
+
+  const identifier = clientIp;
+  const rateLimitResult = await ratelimit.limit(identifier);
+
+  NextResponse.next().headers.set(
+    "X-RateLimit-Limit",
+    rateLimitResult.limit.toString(),
+  );
+  NextResponse.next().headers.set(
+    "X-RateLimit-Remaining",
+    rateLimitResult.remaining.toString(),
+  );
+
   try {
     const data: Hook[] = await loadData();
     const hook = data.find((hook) => hook.title === title);
@@ -32,6 +49,13 @@ export async function GET(
       return NextResponse.json(
         { error: "Couldn't find the requested hook." },
         { status: 404 },
+      );
+    }
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Ratelimit exceeded. Please try again in a few seconds." },
+        { status: 429 },
       );
     }
 

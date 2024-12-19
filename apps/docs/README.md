@@ -1,3 +1,3 @@
 # Rehooks
 
-Documentation for the rehooks library.
+Documentation for the Rehooks CLI.

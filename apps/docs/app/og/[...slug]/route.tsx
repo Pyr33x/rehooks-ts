@@ -1,7 +1,7 @@
 import { generateOGImage } from "fumadocs-ui/og";
 import { type NextRequest } from "next/server";
 import { notFound } from "next/navigation";
-import { source } from "@/app/source";
+import { source } from "@/lib/source";
 
 export function GET(
   _: NextRequest,

@@ -1,6 +1,7 @@
 ---
 title: Contributing
 description: How to contribute to Rehooks
+icon: "UserRoundPlus"
 ---
 
 import { Files, Folder, File } from "fumadocs-ui/components/files";
@@ -11,7 +12,7 @@ import { Files, Folder, File } from "fumadocs-ui/components/files";
 
 To get started with contributing to Rehooks, you'll need to clone the repository and install the dependencies. You can do this by running the following commands:
 
-```bash
+```bash title="Terminal"
 git clone https://github.com/rehooks/rehooks.git
 cd rehooks
 pnpm install
@@ -26,7 +27,7 @@ pnpm install
 
 You are not able to publish the CLI to NPM, but you can use it locally. To do this, you must run the following command:
 
-```bash
+```bash title="Terminal"
 cd packages/cli
 pnpm build
 pnpm start
@@ -36,7 +37,7 @@ pnpm start
 
 You can use the package to use in monorepo internally. Head over to the `packages/core` folder and run the following command:
 
-```bash
+```bash title="Terminal"
 cd packages/core
 pnpm build
 ```
@@ -50,6 +51,10 @@ First, let's take a look at the structure of the docs:
     <Folder name="app"></Folder>
     <Folder name="components"></Folder>
     <Folder name="content" defaultOpen>
+      <Folder name="hooks" defaultOpen>
+        <File name="useThrottle.mdx" />
+        <File name="useFetch.mdx" />
+      </Folder>
       <File name="index.mdx" />
       <File name="guide.mdx" />
     </Folder>
@@ -60,10 +65,6 @@ First, let's take a look at the structure of the docs:
 ### App
 
 The `app` folder contains the main application of the docs. It is a Next.js application that uses the `fumadocs-ui` to render the docs.
-
-### Components
-
-The `components` folder contains the components that are used in the landing page. Which contains the `Grid` component that renders the cards.
 
 ### Content
 

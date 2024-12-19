@@ -22,27 +22,42 @@ export function useScroll(): {
   scrollTo: (options: ScrollToOptions) => void;
 } {
   const [position, setPosition] = useState<ScrollPosition>({
-    x: window.scrollX,
-    y: window.scrollY,
+    x: 0,
+    y: 0,
   });
 
   const handleScroll = () => {
-    setPosition({
-      x: window.scrollX,
-      y: window.scrollY,
-    });
+    if (typeof window !== "undefined") {
+      setPosition({
+        x: window.scrollX,
+        y: window.scrollY,
+      });
+    }
   };
 
   useLayoutEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    if (typeof window !== "undefined") {
+      setPosition({
+        x: window.scrollX,
+        y: window.scrollY,
+      });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+      window.addEventListener("scroll", handleScroll);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
+
+  const scrollTo = (options: ScrollToOptions) => {
+    if (typeof window !== "undefined") {
+      window.scrollTo(options);
+    }
+  };
 
   return {
     position,
-    scrollTo: window.scrollTo.bind(window),
+    scrollTo,
   };
 }

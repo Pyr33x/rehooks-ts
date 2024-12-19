@@ -5,10 +5,9 @@ import {
   DocsDescription,
 } from "fumadocs-ui/page";
 import defaultMdxComponents from "fumadocs-ui/mdx";
-import { getImageMeta } from "fumadocs-ui/og";
+import { metadataImage } from "@/lib/metadata";
 import { notFound } from "next/navigation";
-import { source } from "@/app/source";
-import type { Metadata } from "next";
+import { source } from "@/lib/source";
 
 export default async function Page({
   params,
@@ -35,21 +34,15 @@ export async function generateStaticParams() {
   return source.generateParams();
 }
 
-export function generateMetadata({ params }: { params: { slug?: string[] } }) {
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const image = getImageMeta("og", page.slugs);
-
-  return {
+  return metadataImage.withImage(page.slugs, {
     title: page.data.title,
     description: page.data.description,
-    openGraph: {
-      images: image,
-    },
-    twitter: {
-      images: image,
-      card: "summary_large_image",
-    },
-  } satisfies Metadata;
+  });
 }

@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { ratelimit } from "@/lib/ratelimit";
 import type { Hook } from "@rehooks/utils";
 import path from "path";
 import fs from "fs";
 
 export const dynamic = "force-dynamic";
 
-const filePath = path.join(process.cwd(), "app", "hooks.json");
+const filePath = path.join(process.cwd(), "lib", "hooks.json");
 
 async function loadData(): Promise<Hook[]> {
   return new Promise((resolve, reject) => {
@@ -20,9 +21,25 @@ async function loadData(): Promise<Hook[]> {
   });
 }
 
-export async function GET(request: Request) {
+export async function GET(req: NextRequest) {
+  const clientIp = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(
+    ",",
+  )[0];
+
+  const identifier = clientIp;
+  const rateLimitResult = await ratelimit.limit(identifier);
+
+  NextResponse.next().headers.set(
+    "X-RateLimit-Limit",
+    rateLimitResult.limit.toString(),
+  );
+  NextResponse.next().headers.set(
+    "X-RateLimit-Remaining",
+    rateLimitResult.remaining.toString(),
+  );
+
   try {
-    const url = new URL(request.url);
+    const url = new URL(req.url);
     const limit = url.searchParams.get("limit");
     const search = url.searchParams.get("search");
     const data: Hook[] = await loadData();
@@ -42,6 +59,13 @@ export async function GET(request: Request) {
         );
       }
       result = result.slice(0, parsedLimit);
+    }
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: "Ratelimit exceeded. Please try again in a few seconds." },
+        { status: 429 },
+      );
     }
 
     return NextResponse.json(result, {
